@@ -125,7 +125,7 @@ func (f *FraudProof) GetModuleToDeepIAVLTree() (map[string]*iavl.DeepSubTree, er
 		treeVersion := f.BlockHeight // TODO(danwt): explain
 		cacheSize := 100             // Copied from celestia
 		// create an empty tree
-		tree := iavl.NewDeepSubTree(db.NewMemDB(), cacheSize, false, treeVersion)
+		tree := iavl.NewDeepSubTree(db.NewMemDB(), cacheSize, false, treeVersion) // TODO: use fast mode?
 
 		// convert the sdk witness data to the iavl witness data format
 		// this populates the tree for each operation we are going to do
