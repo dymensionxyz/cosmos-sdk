@@ -20,7 +20,8 @@ type FraudProof struct {
 	// The block height to load state of, aka the last committed block. Note: this diverges from the ADR
 	BlockHeight int64
 
-	PreStateAppHash      []byte
+	PreStateAppHash []byte
+	// ExpectedValidAppHash is the app hash that the app should have had if the sequencer had not been fraudulent.
 	ExpectedValidAppHash []byte
 	// A map from module name to state witness
 	moduleToWitness map[string]StateWitness
@@ -32,7 +33,7 @@ type FraudProof struct {
 	FraudulentEndBlock   *abci.RequestEndBlock
 
 	// TODO(danwt): see celestia todos https://github.com/celestiaorg/cosmos-sdk/compare/release/v0.46.x-celestia...rollkit:cosmos-sdk-old:manav/fraudproof_iavl_prototype#diff-b5f489a3fbc869bd5596de0eea860d2c9e44bcc3793be9b86bb24cc78460f9aaR23-R36
-	// TODO: (?) Add Proof that appHash is inside merklized ISRs in block header at block height
+	// TODO: (?) Add Proof that appHash is inside merklized ISRs in block header at block height TODO: maybe this is not necessary actually, given the BD?
 	// TODO: (?) Add Proof that fraudulent state transition is inside merkelizied transactions in block header
 }
 
@@ -197,7 +198,7 @@ func (f *FraudProof) ValidateBasic() error {
 
 		// Now check inside the substore proofs
 		// Note: We can only verify the first witness in this witnessData
-		// with current root hash. Other proofs are verified in the IAVL tree. TODO(danwt): explain why
+		// with current root hash. Other proofs are verified in the IAVL tree. TODO(danwt): explain why, make sure that they are
 		if 0 < len(stateWitness.WitnessData) {
 			witness := stateWitness.WitnessData[0]
 			for _, proofOp := range witness.Proofs {
