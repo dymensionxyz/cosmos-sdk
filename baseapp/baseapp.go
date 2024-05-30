@@ -634,6 +634,7 @@ func (app *BaseApp) runTx(mode runTxMode, txBytes []byte) (gInfo sdk.GasInfo, re
 	gasMeter := ctx.GasMeter()
 	tracer, ok := gasMeter.(*storetypes.TracingBasicGasMeter)
 	if ok {
+		ctx.Logger().Info("Tracing gas meter enabled")
 		tracer.EnableTracing()
 		defer func() {
 			tracer.DisableTracing()

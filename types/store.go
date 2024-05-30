@@ -157,6 +157,10 @@ type (
 )
 
 func NewGasMeter(limit Gas) GasMeter {
+	return types.NewGasMeter(limit)
+}
+
+func NewTracingGasMeter(limit Gas) GasMeter {
 	return types.NewTracingGasMeter(limit)
 }
 

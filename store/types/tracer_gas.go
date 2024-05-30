@@ -14,7 +14,7 @@ type TracingBasicGasMeter struct {
 	basicGasMeter
 }
 
-// NewGasMeter returns a reference to a new basicGasMeter.
+// NewTracingGasMeter returns a reference to a new basicGasMeter.
 func NewTracingGasMeter(limit Gas) GasMeter {
 	id := make([]byte, 16)
 	_, err := rand.Read(id)
