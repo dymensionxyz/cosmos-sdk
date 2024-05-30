@@ -629,6 +629,18 @@ func (app *BaseApp) runTx(mode runTxMode, txBytes []byte) (gInfo sdk.GasInfo, re
 	var gasWanted uint64
 
 	ctx := app.getContextForTx(mode, txBytes)
+
+	//TODO: if block height
+	gasMeter := ctx.GasMeter()
+	tracer, ok := gasMeter.(*storetypes.TracingBasicGasMeter)
+	if ok {
+		tracer.EnableTracing()
+		defer func() {
+			tracer.DisableTracing()
+		}()
+		ctx = ctx.WithBlockGasMeter(tracer)
+	}
+
 	ms := ctx.MultiStore()
 
 	// only run the tx if there is block gas remaining
