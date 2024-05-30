@@ -40,7 +40,7 @@ func (g *TracingBasicGasMeter) DisableTracing() {
 	g.tracing = false
 }
 
-func (g TracingBasicGasMeter) ConsumeGas(amount Gas, descriptor string) {
+func (g *TracingBasicGasMeter) ConsumeGas(amount Gas, descriptor string) {
 	if !g.tracing {
 		g.basicGasMeter.ConsumeGas(amount, descriptor)
 		return

@@ -629,19 +629,6 @@ func (app *BaseApp) runTx(mode runTxMode, txBytes []byte) (gInfo sdk.GasInfo, re
 	var gasWanted uint64
 
 	ctx := app.getContextForTx(mode, txBytes)
-
-	//TODO: if block height
-	gasMeter := ctx.GasMeter()
-	tracer, ok := gasMeter.(*storetypes.TracingBasicGasMeter)
-	if ok {
-		ctx.Logger().Info("Tracing gas meter enabled")
-		tracer.EnableTracing()
-		defer func() {
-			tracer.DisableTracing()
-		}()
-		ctx = ctx.WithBlockGasMeter(tracer)
-	}
-
 	ms := ctx.MultiStore()
 
 	// only run the tx if there is block gas remaining
@@ -728,6 +715,15 @@ func (app *BaseApp) runTx(mode runTxMode, txBytes []byte) (gInfo sdk.GasInfo, re
 		priority = ctx.Priority()
 		msCache.Write()
 		anteEvents = events.ToABCIEvents()
+	}
+
+	tracingGasMeter, ok := ctx.GasMeter().(*storetypes.TracingBasicGasMeter)
+	if mode == runTxModeDeliver && ok {
+		tracingGasMeter.EnableTracing()
+		defer func() {
+			tracingGasMeter.DisableTracing()
+		}()
+		ctx = ctx.WithBlockGasMeter(tracingGasMeter)
 	}
 
 	// Create a new Context based off of the existing Context with a MultiStore branch

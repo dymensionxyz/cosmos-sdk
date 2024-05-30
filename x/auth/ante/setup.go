@@ -70,5 +70,9 @@ func SetGasMeter(simulate bool, ctx sdk.Context, gasLimit uint64) sdk.Context {
 		return ctx.WithGasMeter(sdk.NewInfiniteGasMeter())
 	}
 
-	return ctx.WithGasMeter(sdk.NewTracingGasMeter(gasLimit))
+	if ctx.BlockHeight() > 434_910 {
+		return ctx.WithGasMeter(sdk.NewTracingGasMeter(gasLimit))
+	}
+
+	return ctx.WithGasMeter(sdk.NewGasMeter(gasLimit))
 }
