@@ -717,19 +717,16 @@ func (app *BaseApp) runTx(mode runTxMode, txBytes []byte) (gInfo sdk.GasInfo, re
 		anteEvents = events.ToABCIEvents()
 	}
 
-	tracingGasMeter, ok := ctx.GasMeter().(*storetypes.TracingBasicGasMeter)
-	if mode == runTxModeDeliver && ok {
-		tracingGasMeter.EnableTracing()
-		defer func() {
-			tracingGasMeter.DisableTracing()
-		}()
-		ctx = ctx.WithBlockGasMeter(tracingGasMeter)
-	}
-
 	// Create a new Context based off of the existing Context with a MultiStore branch
 	// in case message processing fails. At this point, the MultiStore
 	// is a branch of a branch.
 	runMsgCtx, msCache := app.cacheTxContext(ctx, txBytes)
+	tracingGasMeter, ok := runMsgCtx.GasMeter().(*storetypes.TracingBasicGasMeter)
+	if mode == runTxModeDeliver && ok {
+		ctx.Logger().Info("ante handler gas consumption", "gas_used", runMsgCtx.GasMeter().GasConsumed())
+		tracingGasMeter.EnableTracing()
+		runMsgCtx = ctx.WithBlockGasMeter(tracingGasMeter)
+	}
 
 	// Attempt to execute all messages and only update state if all messages pass
 	// and we're in DeliverTx. Note, runMsgs will never return a reference to a

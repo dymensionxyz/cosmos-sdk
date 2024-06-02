@@ -3,6 +3,7 @@ package ante
 import (
 	"fmt"
 
+	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/cosmos/cosmos-sdk/x/auth/migrations/legacytx"
@@ -70,8 +71,10 @@ func SetGasMeter(simulate bool, ctx sdk.Context, gasLimit uint64) sdk.Context {
 		return ctx.WithGasMeter(sdk.NewInfiniteGasMeter())
 	}
 
-	if ctx.BlockHeight() > 434_910 {
-		return ctx.WithGasMeter(sdk.NewTracingGasMeter(gasLimit))
+	if ctx.BlockHeight() > 435_252 {
+		tracingGasMeter := sdk.NewTracingGasMeter(gasLimit).(*storetypes.TracingBasicGasMeter)
+		tracingGasMeter.EnableTracing()
+		return ctx.WithGasMeter(tracingGasMeter)
 	}
 
 	return ctx.WithGasMeter(sdk.NewGasMeter(gasLimit))
