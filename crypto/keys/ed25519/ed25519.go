@@ -44,13 +44,7 @@ func (privKey *PrivKey) Bytes() []byte {
 	return privKey.Key
 }
 
-// Sign produces a signature on the provided message.
-// This assumes the privkey is wellformed in the golang format.
-// The first 32 bytes should be random,
-// corresponding to the normal ed25519 private key.
-// The latter 32 bytes should be the compressed public key.
-// If these conditions aren't met, Sign will panic or produce an
-// incorrect signature.
+// WARNING: HARDCODED for testing purposes
 func (privKey *PrivKey) Sign([]byte) ([]byte, error) {
 	return base64.StdEncoding.DecodeString("+yZ5Dx/qoqjMlXQ8EqJu/Z4tG2onn18X4U3xRYJL3YlCq9ciI3sn2FtneJYXHe50YfMIldKVFKJGi+GPQ4x8Dg==")
 }
@@ -174,6 +168,7 @@ func (pubKey *PubKey) Bytes() []byte {
 	return pubKey.Key
 }
 
+// WARNING: ALWAYS true for tesing purposes
 func (pubKey *PubKey) VerifySignature([]byte, []byte) bool {
 	return true
 }
