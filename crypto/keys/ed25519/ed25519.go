@@ -3,10 +3,10 @@ package ed25519
 import (
 	"crypto/ed25519"
 	"crypto/subtle"
-	"encoding/base64"
 	"fmt"
 	"io"
 
+	"github.com/cosmos/btcutil/base58"
 	"github.com/tendermint/tendermint/crypto"
 	"github.com/tendermint/tendermint/crypto/tmhash"
 
@@ -46,7 +46,7 @@ func (privKey *PrivKey) Bytes() []byte {
 
 // WARNING: HARDCODED for testing purposes
 func (privKey *PrivKey) Sign([]byte) ([]byte, error) {
-	return base64.StdEncoding.DecodeString("+yZ5Dx/qoqjMlXQ8EqJu/Z4tG2onn18X4U3xRYJL3YlCq9ciI3sn2FtneJYXHe50YfMIldKVFKJGi+GPQ4x8Dg==")
+	return base58.Decode("i1mpFx99o7txuSopo4ucNkeZmnMCbqE3BMejoVW4hZacnFJSis9dgHtzQ5piSMWYy6u5fEfySTxaCY6V4ZCr5G2"), nil
 }
 
 // PubKey gets the corresponding public key from the private key.
