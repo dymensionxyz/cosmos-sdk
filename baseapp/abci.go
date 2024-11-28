@@ -106,9 +106,11 @@ func (app *BaseApp) InitChain(req abci.RequestInitChain) (res abci.ResponseInitC
 	// NOTE: We don't commit, but BeginBlock for block `initial_height` starts from this
 	// deliverState.
 	return abci.ResponseInitChain{
-		ConsensusParams: res.ConsensusParams,
-		Validators:      res.Validators,
-		AppHash:         appHash,
+		ConsensusParams:        res.ConsensusParams,
+		Validators:             res.Validators,
+		AppHash:                appHash,
+		RollappParams:          res.RollappParams,
+		GenesisBridgeDataBytes: res.GenesisBridgeDataBytes,
 	}
 }
 
