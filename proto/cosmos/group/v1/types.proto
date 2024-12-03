@@ -149,7 +149,7 @@ message GroupMember {
   Member member = 2;
 }
 
-// GroupPolicyMetadata represents structured metadata for a group policy
+// GroupPolicyMetadata represents structured metadata for a group policy administrator
 message GroupPolicyMetadata {
   // moniker is a human readable name for the group policy
   string moniker = 1;
@@ -167,7 +167,7 @@ message GroupPolicyMetadata {
   repeated string supported_rollapps = 5;
 }
 
-// GroupPolicyContactDetails contains contact information for a group policy
+// GroupPolicyContactDetails contains contact information for a group policy administrator
 message GroupPolicyContactDetails {
   // x (formerly Twitter) handle
   string x = 1;
