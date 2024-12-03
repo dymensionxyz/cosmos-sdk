@@ -1,7 +1,9 @@
 package cli
 
 import (
+	"encoding/json"
 	"fmt"
+	"os"
 	"strconv"
 
 	"github.com/spf13/cobra"
@@ -511,9 +513,26 @@ func MsgUpdateGroupPolicyDecisionPolicyCmd() *cobra.Command {
 // MsgUpdateGroupPolicyMetadataCmd creates a CLI command for Msg/MsgUpdateGroupPolicyMetadata.
 func MsgUpdateGroupPolicyMetadataCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "update-group-policy-metadata [admin] [group-policy-account] [new-metadata]",
-		Short: "Update a group policy metadata",
-		Args:  cobra.ExactArgs(3),
+		Use:   "update-group-policy-metadata [admin] [group-policy-account] [metadata-file]",
+		Short: "Update a group policy metadata using a JSON file",
+		Long: `Update a group policy metadata using a JSON file that contains the metadata structure.
+		
+Example metadata.json file content:
+{
+    "moniker": "My Group",
+    "description": "A description of my group",
+    "contact_details": {
+        "x": "mygroup",
+        "website": "https://mygroup.com",
+        "telegram": "mygroup"
+    },
+    "fee_share": "10%",
+    "supported_rollapps": ["rollapp1", "rollapp2"]
+}
+
+Example:
+$ simd tx group update-group-policy-metadata [admin] [group-policy-account] metadata.json`,
+		Args: cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			err := cmd.Flags().Set(flags.FlagFrom, args[0])
 			if err != nil {
@@ -525,11 +544,23 @@ func MsgUpdateGroupPolicyMetadataCmd() *cobra.Command {
 				return err
 			}
 
+			// Read and parse the JSON file
+			metadataBytes, err := os.ReadFile(args[2])
+			if err != nil {
+				return fmt.Errorf("failed to read metadata file: %w", err)
+			}
+
+			var metadata group.GroupPolicyMetadata
+			if err := json.Unmarshal(metadataBytes, &metadata); err != nil {
+				return fmt.Errorf("failed to parse metadata JSON: %w", err)
+			}
+
 			msg := &group.MsgUpdateGroupPolicyMetadata{
 				Admin:              clientCtx.GetFromAddress().String(),
 				GroupPolicyAddress: args[1],
-				Metadata:           args[2],
+				Metadata:           &metadata,
 			}
+
 			if err = msg.ValidateBasic(); err != nil {
 				return fmt.Errorf("message validation failed: %w", err)
 			}

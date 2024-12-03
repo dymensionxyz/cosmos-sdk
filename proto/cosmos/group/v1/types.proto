@@ -149,6 +149,36 @@ message GroupMember {
   Member member = 2;
 }
 
+// GroupPolicyMetadata represents structured metadata for a group policy
+message GroupPolicyMetadata {
+  // moniker is a human readable name for the group policy
+  string moniker = 1;
+
+  // description is a human readable description of the group policy
+  string description = 2;
+
+  // contact_details contains various contact information
+  GroupPolicyContactDetails contact_details = 3;
+
+  // fee_share is the percentage of fees shared with delegators
+  string fee_share = 4;
+
+  // supported_rollapps is a list of rollapp IDs that this group policy supports
+  repeated string supported_rollapps = 5;
+}
+
+// GroupPolicyContactDetails contains contact information for a group policy
+message GroupPolicyContactDetails {
+  // x (formerly Twitter) handle
+  string x = 1;
+
+  // website URL
+  string website = 2;
+
+  // telegram handle
+  string telegram = 3;
+}
+
 // GroupPolicyInfo represents the high-level on-chain information for a group policy.
 message GroupPolicyInfo {
   option (gogoproto.equal)           = true;
@@ -163,8 +193,8 @@ message GroupPolicyInfo {
   // admin is the account address of the group admin.
   string admin = 3 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 
-  // metadata is any arbitrary metadata to attached to the group policy.
-  string metadata = 4;
+  // metadata is structured metadata for the group policy.
+  GroupPolicyMetadata metadata = 4;
 
   // version is used to track changes to a group's GroupPolicyInfo structure that
   // would create a different result on a running proposal.
