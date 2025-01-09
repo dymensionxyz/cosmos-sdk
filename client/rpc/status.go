@@ -26,9 +26,10 @@ type validatorInfo struct {
 // ResultStatus is node's info, same as Tendermint, except that we use our own
 // PubKey.
 type resultStatus struct {
-	NodeInfo      p2p.DefaultNodeInfo
-	SyncInfo      coretypes.SyncInfo
-	ValidatorInfo validatorInfo
+	NodeInfo        p2p.DefaultNodeInfo
+	SyncInfo        coretypes.SyncInfo
+	ValidatorInfo   validatorInfo
+	DymensionStatus coretypes.DymensionStatus
 }
 
 // StatusCommand returns the command to return the status of the network.
@@ -60,6 +61,7 @@ func StatusCommand() *cobra.Command {
 					PubKey:      pk,
 					VotingPower: status.ValidatorInfo.VotingPower,
 				},
+				DymensionStatus: status.DymensionStatus,
 			}
 
 			output, err := clientCtx.LegacyAmino.MarshalJSON(statusWithPk)
